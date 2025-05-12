@@ -9,9 +9,9 @@ import java.sql.*;
  */
 public class ReadDorisTest {
     // JDBC 连接参数
-    private static final String JDBC_URL = "jdbc:mysql://10.39.48.33:9030/dev_t_zh";
-    private static final String USER = "admin";
-    private static final String PASSWORD = "zh1028,./";
+    private static final String JDBC_URL = "jdbc:mysql://192.168.200.142:9030/dev_t_zh";
+    private static final String USER = "root";
+    private static final String PASSWORD = "root";
     // 查询语句，用于获取测试数据
     private static final String QUERY_SQL = "SELECT * FROM dev_t_zh.dws_trade_cart_add_uu_window LIMIT 10";
 
