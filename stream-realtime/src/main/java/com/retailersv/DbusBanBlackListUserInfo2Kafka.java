@@ -27,18 +27,27 @@ import java.util.List;
  */
 public class DbusBanBlackListUserInfo2Kafka {
 
+    // 从配置文件中获取Kafka的启动服务器地址
     private static final String kafka_botstrap_servers = ConfigUtils.getString("kafka.bootstrap.servers");
+    // 从配置文件中获取Kafka中存储数据库事实评论的主题
     private static final String kafka_db_fact_comment_topic = ConfigUtils.getString("kafka.db.fact.comment.topic");
+    // 从配置文件中获取Kafka中存储敏感词检测结果的主题
     private static final String kafka_result_sensitive_words_topic = ConfigUtils.getString("kafka.result.sensitive.words.topic");
 
     @SneakyThrows
     public static void main(String[] args) {
 
+        // 设置Hadoop用户名为root，以便在Hadoop集群上运行时具有相应权限
         System.setProperty("HADOOP_USER_NAME","root");
 
+        // 获取Flink的流执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        // 应用默认的环境参数配置
         EnvironmentSettingUtils.defaultParameter(env);
 
+        // 从Kafka源中读取数据，进行数据处理
+        // 这里使用了构建的Kafka源，指定了Kafka的引导服务器、主题、开始消费的时间和偏移量初始化策略
+        // WatermarkStrategy.noWatermarks()表示不生成水印，因为Kafka源默认是无界数据流
         SingleOutputStreamOperator<String> kafkaCdcDbSource = env.fromSource(
                 KafkaUtils.buildKafkaSource(
                         kafka_botstrap_servers,

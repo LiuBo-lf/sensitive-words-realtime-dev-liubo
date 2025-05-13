@@ -24,6 +24,7 @@ import java.util.Properties;
  * @ Date  2025/5/12 16:31
  * @ description:
  * @ version 1.0
+ * @author 26434
  */
 public final class KafkaUtils {
 
@@ -54,11 +55,9 @@ public final class KafkaUtils {
         prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class.getName());
         return prop;
     }
-
     /**
      * 构建生产者配置
-     *
-     * @return
+     * @ return
      */
     public static Properties buildPropsByProducer() {
         final Properties props = new Properties();

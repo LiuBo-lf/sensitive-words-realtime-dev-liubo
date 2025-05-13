@@ -24,27 +24,19 @@
         </repository>
     </repositories>
 
-    <!--新加可删1个4.4.3-->
     <dependencies>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>4.4.3</version> <!-- 使用最新稳定版本 -->
-        </dependency>
 
 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs-client</artifactId>
             <version>${hadoop.version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
 
 
@@ -81,7 +73,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.7</version>
-<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
@@ -102,7 +93,6 @@
                     <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
             </exclusions>
-<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
@@ -115,7 +105,6 @@
                     <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
             </exclusions>
-<!--            <scope>provided</scope>-->
         </dependency>
 
 
@@ -124,7 +113,6 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-kafka</artifactId>
-            <!--            <scope>provided</scope>-->
         </dependency>
 
         <!--        flink RocksDB 依赖-->
@@ -193,7 +181,6 @@
             <groupId>com.alibaba.hologres</groupId>
             <artifactId>hologres-connector-flink-1.17</artifactId>
             <version>1.4.2</version>
-<!--            <scope>provided</scope>-->
             <classifier>jar-with-dependencies</classifier>
         </dependency>
 
@@ -218,13 +205,11 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
-            <!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-<!--            <scope>compile</scope>-->
         </dependency>
 
         <dependency>
@@ -264,7 +249,6 @@
             <groupId>org.apache.paimon</groupId>
             <artifactId>paimon-s3</artifactId>
             <version>1.0.1</version>
-            <!--            <scope>test</scope>-->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.paimon/paimon-flink-common -->
@@ -272,7 +256,6 @@
             <groupId>org.apache.paimon</groupId>
             <artifactId>paimon-flink-common</artifactId>
             <version>1.0.1</version>
-            <!--            <scope>test</scope>-->
         </dependency>
 
         <dependency>
@@ -298,10 +281,12 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-s3-fs-hadoop</artifactId>
             <version>${flink.version}</version>
-            <!--            <scope>provided</scope>-->
         </dependency>
-
-
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.3.0</version>
+        </dependency>
 
 
     </dependencies>

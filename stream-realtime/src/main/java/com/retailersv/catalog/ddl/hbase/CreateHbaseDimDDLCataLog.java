@@ -45,7 +45,6 @@ public class CreateHbaseDimDDLCataLog {
     public static void main(String[] args) {
         // 设置Hadoop用户名
         System.setProperty("HADOOP_USER_NAME", "root");
-
         // 初始化流执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // 初始化流表环境
@@ -56,7 +55,7 @@ public class CreateHbaseDimDDLCataLog {
         tenv.useCatalog("hive-catalog");
         // 执行SQL显示当前所有的表
         tenv.executeSql("show tables;").print();
-        // 执行SQL删除表（如果存在）
+        // 执行SQL删除表
         tenv.executeSql(DROP_TABEL_PREFIX + getCreateTableDDLTableName(createHbaseDimBaseDicDDL));
         // 再次执行SQL显示当前所有的表
         tenv.executeSql("show tables;").print();
@@ -70,7 +69,6 @@ public class CreateHbaseDimDDLCataLog {
 
     /**
      * 从创建表的DDL语句中提取表名
-     *
      * @param createDDL 创建表的DDL语句
      * @return 表名
      */
