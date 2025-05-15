@@ -2,6 +2,7 @@ package com.lb.stream.realtime.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lb.stream.realtime.constant.Constant;
+import com.lb.stream.realtime.func.TableProcessDim;
 import com.lb.stream.realtime.utils.HBaseUtil;
 import com.lb.stream.realtime.utils.RedisUtil;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -18,7 +19,7 @@ import redis.clients.jedis.Jedis;
  * @ description:
  * @ version 1.0
  */
-public class HBaseSinkFunction extends RichSinkFunction < Tuple2 <JSONObject, TableProcessDim > > {
+public class HBaseSinkFunction extends RichSinkFunction < Tuple2 <JSONObject, TableProcessDim> > {
     private Connection hbaseConn;
     private Jedis jedis;
 

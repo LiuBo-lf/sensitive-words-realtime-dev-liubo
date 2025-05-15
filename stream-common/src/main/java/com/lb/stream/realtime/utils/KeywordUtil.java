@@ -1,6 +1,12 @@
 package com.lb.stream.realtime.utils;
 
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
+
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ Package com.lb.stream.realtime.utils.KeywordUtil
@@ -12,7 +18,7 @@ import java.io.IOException;
 public class KeywordUtil {
     //分词
     public static List <String> analyze(String text){
-        List<String> keywordList = new ArrayList <>();
+        List<String> keywordList = new ArrayList<>();
         StringReader reader = new StringReader(text);
         IKSegmenter ik = new IKSegmenter(reader,true);
         try {

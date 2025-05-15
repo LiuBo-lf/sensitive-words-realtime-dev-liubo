@@ -1,8 +1,21 @@
 package com.lb.stream.realtime.utils;
 
-import org.apache.hadoop.hbase.client.AdvancedScanResultConsumer;
-import org.apache.hadoop.hbase.client.AsyncConnection;
-import org.apache.hadoop.hbase.client.AsyncTable;
+import com.alibaba.fastjson.JSONObject;
+import com.lb.stream.realtime.constant.Constant;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.curator.shaded.com.google.common.base.CaseFormat;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * @ Package com.lb.stream.realtime.utils.HBaseUtil
@@ -110,7 +123,7 @@ public class HBaseUtil {
         TableName tableNameObj = TableName.valueOf(namespace, tableName);
         try (Table table = hbaseConn.getTable(tableNameObj)) {
             Put put = new Put(Bytes.toBytes(rowKey));
-            Set <String> columns = jsonObj.keySet();
+            Set<String> columns = jsonObj.keySet();
             for (String column : columns) {
                 String value = jsonObj.getString(column);
                 if (StringUtils.isNotEmpty(value)) {
@@ -158,7 +171,7 @@ public class HBaseUtil {
         try (Table table = hbaseConn.getTable(tableNameObj)){
             Get get = new Get(Bytes.toBytes(rowKey));
             Result result = table.get(get);
-            List < Cell > cells = result.listCells();
+            List<Cell> cells = result.listCells();
             if(cells != null && cells.size() > 0){
                 //定义一个对象，用于封装查询出来的一行数据
                 T obj = clz.newInstance();

@@ -1,5 +1,6 @@
 package com.lb.stream.realtime.function;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lb.stream.realtime.bean.DimJoinFunction;
 import com.lb.stream.realtime.constant.Constant;
 import com.lb.stream.realtime.utils.HBaseUtil;
@@ -44,7 +45,7 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T,T> impleme
     public void asyncInvoke(T obj, ResultFuture<T> resultFuture) throws Exception {
         //创建异步编排对象  执行线程任务，有返回值
         CompletableFuture.supplyAsync(
-                new Supplier < JSONObject >() {
+                new Supplier <JSONObject>() {
                     @Override
                     public JSONObject get() {
                         //根据当前流中对象获取要关联的维度的主键

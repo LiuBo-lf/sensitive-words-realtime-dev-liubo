@@ -1,5 +1,6 @@
 package com.lb.stream.realtime.function;
 
+import com.lb.stream.realtime.utils.KeywordUtil;
 import org.apache.flink.table.annotation.DataTypeHint;
 import org.apache.flink.table.annotation.FunctionHint;
 import org.apache.flink.table.functions.TableFunction;

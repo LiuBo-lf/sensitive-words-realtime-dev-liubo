@@ -1,28 +1,43 @@
 package com.lb.stream.realtime.utils;
 
+
+import com.alibaba.fastjson.JSONObject;
+import com.lb.stream.realtime.constant.Constant;
+import org.apache.doris.shaded.com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
+import org.apache.flink.connector.kafka.sink.KafkaSink;
+import org.apache.flink.connector.kafka.source.KafkaSource;
+import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * @ Package com.lb.stream.realtime.utils.KafkaUtils
  * @ Author  liu.bo
- * @ Date  2025/5/14 22:12
- * @ description:
+ * @ Date  2025/5/15 09:52
+ * @ description: 
  * @ version 1.0
- */
+*/
 public final class KafkaUtils {
 
     /**
      * 构建基于字符串序列化的Kafka属性
      *
      * @param groupId 消费组ID
-     *
      */
     public static Properties buildPropsStringDeserializer(String groupId) {
         final Properties props = new Properties();
         props.setProperty("bootstrap.servers", Constant.KAFKA_BROKERS);
-        System.err.println( Constant.KAFKA_BROKERS);
+        System.err.println(Constant.KAFKA_BROKERS);
         props.setProperty("group.id", groupId);
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -31,13 +46,13 @@ public final class KafkaUtils {
         return props;
     }
 
-    public static Properties getKafkaConsumerProperties(String server, String groupId, String offset){
+    public static Properties getKafkaConsumerProperties(String server, String groupId, String offset) {
         Properties prop = new Properties();
-        prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,server);
-        prop.put(ConsumerConfig.GROUP_ID_CONFIG,groupId);
-        prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,offset);
+        prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
+        prop.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, offset);
         prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class.getName());
+        prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         return prop;
     }
 
@@ -55,20 +70,20 @@ public final class KafkaUtils {
         return props;
     }
 
-    public static void sinkJson2KafkaMessage(String topicName, ArrayList<JSONObject> jsonObjectArrayList){
+    public static void sinkJson2KafkaMessage(String topicName, ArrayList<JSONObject> jsonObjectArrayList) {
         Properties properties = buildPropsByProducer();
-        try(KafkaProducer<String, String> producer = new KafkaProducer<>(properties)) {
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(properties)) {
             for (JSONObject jsonObject : jsonObjectArrayList) {
-                producer.send(new ProducerRecord<>(topicName,jsonObject.toString()));
+                producer.send(new ProducerRecord<>(topicName, jsonObject.toString()));
             }
             System.out.println("数据已成功发送到Kafka主题: " + topicName);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("发送数据到Kafka主题时出现错误");
         }
     }
 
-    public static KafkaSource<String> buildKafkaSource(String bootServerList,String kafkaTopic,String group,OffsetsInitializer offset){
+    public static KafkaSource<String> buildKafkaSource(String bootServerList, String kafkaTopic, String group, OffsetsInitializer offset) {
         return KafkaSource.<String>builder()
                 .setBootstrapServers(bootServerList)
                 .setTopics(kafkaTopic)
@@ -76,11 +91,11 @@ public final class KafkaUtils {
                 .setStartingOffsets(offset)
                 .setValueOnlyDeserializer(new SimpleStringSchema())
                 // 自动发现消费的partition变化
-                .setProperty("flink.partition-discovery.interval-millis",String.valueOf(10 * 1000))
+                .setProperty("flink.partition-discovery.interval-millis", String.valueOf(10 * 1000))
                 .build();
     }
 
-    public static KafkaSource<String> buildKafkaSecureSource(String bootServerList,String kafkaTopic,String group,OffsetsInitializer offset){
+    public static KafkaSource<String> buildKafkaSecureSource(String bootServerList, String kafkaTopic, String group, OffsetsInitializer offset) {
         return KafkaSource.<String>builder()
                 .setBootstrapServers(bootServerList)
                 .setTopics(kafkaTopic)
@@ -88,10 +103,9 @@ public final class KafkaUtils {
                 .setStartingOffsets(offset)
                 .setValueOnlyDeserializer(new SafeStringDeserializationSchema())
                 // 自动发现消费的partition变化
-                .setProperty("flink.partition-discovery.interval-millis",String.valueOf(10 * 1000))
+                .setProperty("flink.partition-discovery.interval-millis", String.valueOf(10 * 1000))
                 .build();
     }
-
 
 
     public static KafkaSink<String> buildKafkaSink(String bootServerList, String kafkaTopic) {
@@ -99,7 +113,7 @@ public final class KafkaUtils {
         producerProperties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootServerList);
         producerProperties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
         producerProperties.setProperty(ProducerConfig.RETRIES_CONFIG, String.valueOf(Integer.MAX_VALUE));
-        producerProperties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,"true");
+        producerProperties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         producerProperties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArraySerializer.class.getName());
         producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArraySerializer.class.getName());
 
@@ -139,6 +153,6 @@ public final class KafkaUtils {
             return TypeInformation.of(String.class);
         }
     }
-
-
 }
+
+

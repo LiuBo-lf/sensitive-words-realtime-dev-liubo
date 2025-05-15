@@ -1,8 +1,12 @@
 package com.lb.stream.realtime.app.ods;
 
 import com.lb.stream.realtime.utils.FlinkSinkUtil;
+import com.lb.stream.realtime.utils.FlinkSourceUtil;
+import com.ververica.cdc.connectors.mysql.source.MySqlSource;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
  * @ Package com.lb.stream.realtime.app.ods.MysqlToKafka
@@ -17,7 +21,7 @@ public class MysqlToKafka {
         env.setParallelism(1);
 
 //  从工具类获取MySQL数据源，数据源名称为realtime_v1，查询所有列
-        MySqlSource <String> realtimeV1 = FlinkSourceUtil.getMySqlSource("realtime_v1", "*");
+        MySqlSource<String> realtimeV1 = FlinkSourceUtil.getMySqlSource("realtime_v1", "*");
 
 //  从MySQL数据源创建DataStreamSource，不使用水位线策略
         DataStreamSource<String> mySQLSource = env.fromSource(realtimeV1, WatermarkStrategy.noWatermarks(), "MySQL Source");

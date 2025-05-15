@@ -1,6 +1,13 @@
 package com.lb.stream.realtime.utils;
 
+
+import com.lb.stream.realtime.constant.Constant;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.curator.shaded.com.google.common.base.CaseFormat;
+
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ Package com.lb.stream.realtime.utils.JdbcUtil

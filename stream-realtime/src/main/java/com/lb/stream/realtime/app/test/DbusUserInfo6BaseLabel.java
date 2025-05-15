@@ -1,11 +1,15 @@
 package com.lb.stream.realtime.app.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lb.stream.realtime.constant.Constant;
+import com.lb.stream.realtime.func.UserInfoMessageDeduplicateProcessFunc;
 import com.lb.stream.realtime.utils.FlinkSourceUtil;
 import com.lb.stream.realtime.utils.KafkaUtils;
+import com.ververica.cdc.connectors.mysql.source.MySqlSource;
 import lombok.SneakyThrows;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
 import org.apache.flink.streaming.api.CheckpointingMode;
@@ -18,6 +22,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @ Package PACKAGE_NAME.DbusUserInfo6BaseLabel
@@ -43,7 +48,7 @@ public class DbusUserInfo6BaseLabel {
 
         env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "kafka_source");
 
-        MySqlSource < String > mySqlSource = FlinkSourceUtil.getMySqlSource("realtime_v1", "user_info");
+        MySqlSource< String > mySqlSource = FlinkSourceUtil.getMySqlSource("realtime_v1", "user_info");
 
         DataStreamSource< String > mysqlStrDS = env
                 .fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "mysql_source")
@@ -70,7 +75,7 @@ public class DbusUserInfo6BaseLabel {
                 .uid("kafka cdc userInfoMsgSup")
                 .name("kafka cdc userInfoMsgSup");
 
-        SingleOutputStreamOperator < JSONObject > userInfoDs = kafkaCdcUserInfoSupDs.map(new RichMapFunction < JSONObject, JSONObject >() {
+        SingleOutputStreamOperator < JSONObject > userInfoDs = kafkaCdcUserInfoSupDs.map(new RichMapFunction< JSONObject, JSONObject >() {
             @Override
             public JSONObject map(JSONObject jsonObject) throws Exception {
                 JSONObject result = new JSONObject();

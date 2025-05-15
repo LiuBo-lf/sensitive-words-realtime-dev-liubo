@@ -1,7 +1,15 @@
 package com.lb.stream.realtime.utils;
 
+import com.lb.stream.realtime.constant.Constant;
 import com.ververica.cdc.connectors.mysql.source.MySqlSource;
+import com.ververica.cdc.connectors.mysql.table.StartupOptions;
 import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
+import org.apache.flink.api.common.serialization.DeserializationSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.connector.kafka.source.KafkaSource;
+import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
+
+import java.util.Properties;
 
 /**
  * @ Package com.lb.stream.realtime.utils.FlinkSourceUtil
@@ -11,14 +19,14 @@ import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
  * @ version 1.0
  */
 public class FlinkSourceUtil {
-    public static KafkaSource <String> getKafkaSource(String topic, String groupId) {
+    public static KafkaSource<String> getKafkaSource(String topic, String groupId) {
         KafkaSource<String> build = KafkaSource.<String>builder()
                 .setBootstrapServers("cdh01:9092,cdh02:9092,cdh03:9092")
                 .setTopics(topic)
                 .setGroupId(groupId)
                 .setStartingOffsets(OffsetsInitializer.earliest())
                 .setValueOnlyDeserializer(
-                        new DeserializationSchema <String>() {
+                        new DeserializationSchema<String>() {
                             @Override
                             public String deserialize(byte[] message) {
                                 if (message != null) {

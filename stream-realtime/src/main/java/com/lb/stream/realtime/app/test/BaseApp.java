@@ -2,21 +2,28 @@ package com.lb.stream.realtime.app.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.lb.stream.realtime.bean.DimBaseCategory;
 import com.lb.stream.realtime.func.*;
 import com.lb.stream.realtime.utils.JdbcUtils2;
 import com.lb.stream.realtime.utils.KafkaUtils;
 import lombok.SneakyThrows;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
+import java.sql.Connection;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @ Package PACKAGE_NAME.BaseApp
@@ -31,7 +38,7 @@ public class BaseApp {
     private static final String kafka_cdc_db_topic = "topic_db" ;
     private static final String kafka_page_log_topic = "topic_log" ;
 
-    private static final List < DimBaseCategory > dim_base_categories;
+    private static final List<DimBaseCategory> dim_base_categories;
     private static final Connection connection;
 
     private static final double device_rate_weight_coefficient = 0.1; // 设备权重系数

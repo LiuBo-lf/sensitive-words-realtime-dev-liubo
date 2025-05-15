@@ -1,6 +1,23 @@
 package com.lb.stream.realtime.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.SneakyThrows;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.HConstants;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.FirstKeyOnlyFilter;
+import org.apache.hadoop.hbase.io.compress.Compression;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @ Package com.lb.stream.realtime.utils.HbaseUtils
@@ -23,7 +40,7 @@ public class HbaseUtils {
         entries.set(HConstants.HREGION_MEMSTORE_FLUSH_SIZE,"128M");
         entries.set("hbase.incremental.wal","true");
         entries.set(HConstants.HBASE_CLIENT_SCANNER_TIMEOUT_PERIOD,"3600000");
-//        entries.set(HConstants.HBASE_REGIONSERVER_LEASE_PERIOD_KEY,"1200000");
+        // entries.set(HConstants.HBASE_REGIONSERVER_LEASE_PERIOD_KEY,"1200000");
         this.connection = ConnectionFactory.createConnection(entries);
     }
 

@@ -1,6 +1,38 @@
 package com.lb.stream.realtime.app.dws;
 
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lb.stream.realtime.bean.TradeProvinceOrderBean;
+import com.lb.stream.realtime.function.BeanToJsonStrMapFunction;
+import com.lb.stream.realtime.function.DimAsyncFunction;
+import com.lb.stream.realtime.utils.DateFormatUtil;
+import com.lb.stream.realtime.utils.FlinkSinkUtil;
+import com.lb.stream.realtime.utils.FlinkSourceUtil;
+import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.ReduceFunction;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.api.common.state.StateTtlConfig;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.time.Time;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.connector.kafka.source.KafkaSource;
+import org.apache.flink.streaming.api.CheckpointingMode;
+import org.apache.flink.streaming.api.datastream.*;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
+import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.util.Collector;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ Package com.lb.stream.realtime.app.dws.DwsTradeProvinceOrderWindow

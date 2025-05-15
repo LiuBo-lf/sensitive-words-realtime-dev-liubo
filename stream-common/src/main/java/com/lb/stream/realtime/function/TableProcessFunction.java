@@ -1,10 +1,12 @@
 package com.lb.stream.realtime.function;
 
-import org.apache.flink.api.java.tuple.Tuple2;
+import com.alibaba.fastjson.JSONObject;
+import com.lb.stream.realtime.func.TableProcessDim;
+import com.lb.stream.realtime.utils.JdbcUtil;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
-
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
 import org.apache.flink.util.Collector;
@@ -19,7 +21,7 @@ import java.util.*;
  * @ description:
  * @ version 1.0
  */
-public class TableProcessFunction extends BroadcastProcessFunction < JSONObject, TableProcessDim, Tuple2 <JSONObject,TableProcessDim> > {
+public class TableProcessFunction extends BroadcastProcessFunction <JSONObject, TableProcessDim, Tuple2 <JSONObject,TableProcessDim> > {
 
     private MapStateDescriptor <String, TableProcessDim > mapStateDescriptor;
     private Map <String,TableProcessDim> configMap = new HashMap<>();
